@@ -85,7 +85,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
               shinydashboard::box(
                 title = div("Rows Selected", style = "font-weight: bold; text-align: center"),
                 width = 12,
-                htmlOutput(NS(id, "rows_selected_v2"))
+                verbatimTextOutput(NS(id, "rows_selected_v2"))
               )
             )
           )
@@ -145,13 +145,14 @@ mod_embedded_checkbox_in_table_server <- function(id){
     output$table_v2 <- DT::renderDT({
       DT::datatable(
         iris |> 
+          dplyr::mutate(
+            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
+          ) |> 
           dplyr::select(
+            select,
             Petal.Length,
             Petal.Width,
             Species
-          ) |> 
-          dplyr::mutate(
-            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
           ),
         selection = "none",
         escape = FALSE,
@@ -161,6 +162,27 @@ mod_embedded_checkbox_in_table_server <- function(id){
           scrollX = TRUE,
           pageLength = 5
         ),
+        callback = DT::JS(sprintf("
+          var selectedRows = {};
+
+          // Restore checkbox states
+          table.rows().nodes().to$().find('.row_checkbox').each(function(){
+            var val = $(this).val();
+            $(this).prop('checked', selectedRows[val] === true);
+          });
+
+          // Rebind individual checkbox change
+          table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
+            var val = $(this).val();
+            selectedRows[val] = this.checked;
+
+            var selected = Object.keys(selectedRows).filter(function(key){
+              return selectedRows[key];
+            });
+            Shiny.setInputValue('%s', selected);
+          });
+        ", ns("v2_selected_rows")
+        )),
         rownames = FALSE
       )
     })
@@ -188,6 +210,14 @@ mod_embedded_checkbox_in_table_server <- function(id){
           rownames = FALSE
         )
       })"
+    })
+    
+    observe(
+      print(input$v2_selected_rows)
+    )
+    
+    output$rows_selected_v2 = renderText({
+      paste0(input$v2_selected_rows)
     })
     
   })
