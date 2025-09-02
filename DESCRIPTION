@@ -1,0 +1,19 @@
+Package: javascripting
+Title: Javascripting in R shiny
+Version: 0.0.0.9000
+Authors@R: 
+    person("Alison", "Telford", , "atelford7@gmail.com", role = c("aut", "cre"))
+Description: R shiny app containing test javascript features.
+License: MIT + file LICENSE
+Imports: 
+    config,
+    golem,
+    shiny
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+RoxygenNote: 7.3.2
