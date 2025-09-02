@@ -162,24 +162,20 @@ mod_embedded_checkbox_in_table_server <- function(id){
           scrollX = TRUE,
           pageLength = 5
         ),
-        callback = DT::JS(sprintf("
+        callback = htmlwidgets::JS(sprintf("
           var selectedRows = {};
+           table.on('draw', function() {
 
-          // Restore checkbox states
-          table.rows().nodes().to$().find('.row_checkbox').each(function(){
-            var val = $(this).val();
-            $(this).prop('checked', selectedRows[val] === true);
-          });
-
-          // Rebind individual checkbox change
-          table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-            var val = $(this).val();
-            selectedRows[val] = this.checked;
-
-            var selected = Object.keys(selectedRows).filter(function(key){
-              return selectedRows[key];
-            });
-            Shiny.setInputValue('%s', selected);
+            // Rebind individual checkbox change
+            table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
+              var val = $(this).val();
+              selectedRows[val] = this.checked;
+  
+              var selected = Object.keys(selectedRows).filter(function(key){
+                return selectedRows[key];
+              });
+              Shiny.setInputValue('%s', selected);
+            })
           });
         ", ns("v2_selected_rows")
         )),
