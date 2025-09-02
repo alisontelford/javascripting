@@ -3,14 +3,83 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import shinydashboard
+#' @import shinyWidgets
 #' @noRd
 app_ui <- function(request) {
+  # Logo at top-right
+  title_content <- {
+    tags$div(
+      tags$img(
+        src = "www/javascript_icon.png", "",
+        height = "50px", style = "vertical-align: middle;"
+      )
+    )
+  }
+  # Main text on home page
+  title_text_main_cond <- {
+    tags$div(
+      h2("Javascripting examples in R shiny")
+    )
+  }
+  
+  # Secondary text on home page
+  title_text_secondary_cond <- {
+    tags$div(
+      h4("This application contains various small examples for utilising javascript in R shiny.")
+    )
+  }
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      golem::golem_welcome_page() # Remove this line to start building your UI
+    dashboardPage(
+      # Set up the dashboard header.
+      dashboardHeader(
+        title=title_content
+      ),
+      # Set up the dashboard sidebar.
+      dashboardSidebar(
+        sidebarMenu(
+          id="sidebarID",
+          menuItem("Home", tabName="home", icon=icon("home")),
+          menuItem("Checkboxes in DT Table", tabName="checkbox_in_table", icon=icon("square-check"))
+        )
+      ),
+      dashboardBody(
+        tabItems(
+          tabItem(
+            tabName="home",
+            tags$div(
+              style = "vertical-align: middle; text-align: center;",
+              tags$img(src="../www/javascript_icon.png", height="200px")
+            ),
+            title_text_main_cond,
+            title_text_secondary_cond,
+            div(style = "height: 30px"),
+            div(
+              shinydashboard::box(
+                title = "Application Notes",
+                solidHeader = FALSE,
+                collapsible = TRUE,
+                collapsed = FALSE,
+                width = 12,
+                background = NULL,
+                HTML("
+                <h4><strong>0.5.0 (18/12/2024)</strong></h4>
+                  <ul>
+                      <li>First deployed version.</li>
+                  </ul>
+                     ")
+              )
+            )
+          ),
+          tabItem(
+            tabName="checkbox_in_table",
+            mod_embedded_checkbox_in_table_ui("embedded_checkbox_in_table_1")
+          )
+        )
+      )
     )
   )
 }
