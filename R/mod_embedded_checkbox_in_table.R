@@ -17,7 +17,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
           style = "background:rgb(235, 235, 235)",
           fluidRow(
             column(
-              width = 5,
+              width = 12,
               shinydashboard::box(
                 title = div("Table", style = "font-weight: bold; text-align: center"),
                 width = 12,
@@ -29,11 +29,13 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                   )
                 )
               )
-            ),
+            )
+          ),
+          fluidRow(
             column(
-              width = 7,
+              width = 12,
               shinydashboard::box(
-                title = div("Code", style = "font-weight: bold; text-align: center"),
+                title = div("DT::renderDT Code", style = "font-weight: bold; text-align: center"),
                 width = 12,
                 fluidRow(
                   column(
@@ -76,7 +78,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
           ),
           fluidRow(
             column(
-              width = 5,
+              width = 12,
               shinydashboard::box(
                 title = div("Table", style = "font-weight: bold; text-align: center"),
                 width = 12,
@@ -85,31 +87,6 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                     width = 12,
                     align = "center",
                     DT::DTOutput(NS(id, "table_v2"))
-                  )
-                )
-              )
-            ),
-            column(
-              width = 7,
-              shinydashboard::box(
-                title = div("Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                collapsible = TRUE,
-                collapsed = TRUE,
-                fluidRow(
-                  column(
-                    width = 12,
-                    uiOutput(NS(id, "code_v2"))
-                  )
-                )
-              ),
-              shinydashboard::box(
-                title = div("JS Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                fluidRow(
-                  column(
-                    width = 12,
-                    verbatimTextOutput(NS(id, "js_code_v2"))
                   )
                 )
               )
@@ -122,6 +99,34 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 title = div("Rows Selected", style = "font-weight: bold; text-align: center"),
                 width = 12,
                 verbatimTextOutput(NS(id, "rows_selected_v2"))
+              )
+            )
+          ),
+          fluidRow(
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("DT::renderDT Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    uiOutput(NS(id, "code_v2"))
+                  )
+                )
+              )
+            ),
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("JS Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    verbatimTextOutput(NS(id, "js_code_v2"))
+                  )
+                )
               )
             )
           )
@@ -157,7 +162,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
           ),
           fluidRow(
             column(
-              width = 5,
+              width = 12,
               shinydashboard::box(
                 title = div("Table", style = "font-weight: bold; text-align: center"),
                 width = 12,
@@ -166,31 +171,6 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                     width = 12,
                     align = "center",
                     DT::DTOutput(NS(id, "table_v3"))
-                  )
-                )
-              )
-            ),
-            column(
-              width = 7,
-              shinydashboard::box(
-                title = div("Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                collapsible = TRUE,
-                collapsed = TRUE,
-                fluidRow(
-                  column(
-                    width = 12,
-                    uiOutput(NS(id, "code_v3"))
-                  )
-                )
-              ),
-              shinydashboard::box(
-                title = div("JS Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                fluidRow(
-                  column(
-                    width = 12,
-                    verbatimTextOutput(NS(id, "js_code_v3"))
                   )
                 )
               )
@@ -203,6 +183,34 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 title = div("Rows Selected", style = "font-weight: bold; text-align: center"),
                 width = 12,
                 verbatimTextOutput(NS(id, "rows_selected_v3"))
+              )
+            )
+          ),
+          fluidRow(
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("DT::renderDT Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    uiOutput(NS(id, "code_v3"))
+                  )
+                )
+              )
+            ),
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("JS Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    verbatimTextOutput(NS(id, "js_code_v3"))
+                  )
+                )
               )
             )
           )
@@ -236,7 +244,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
           ),
           fluidRow(
             column(
-              width = 5,
+              width = 12,
               shinydashboard::box(
                 title = div("Table", style = "font-weight: bold; text-align: center"),
                 width = 12,
@@ -245,31 +253,6 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                     width = 12,
                     align = "center",
                     DT::DTOutput(NS(id, "table_v4"))
-                  )
-                )
-              )
-            ),
-            column(
-              width = 7,
-              shinydashboard::box(
-                title = div("Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                collapsible = TRUE,
-                collapsed = TRUE,
-                fluidRow(
-                  column(
-                    width = 12,
-                    uiOutput(NS(id, "code_v4"))
-                  )
-                )
-              ),
-              shinydashboard::box(
-                title = div("JS Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                fluidRow(
-                  column(
-                    width = 12,
-                    verbatimTextOutput(NS(id, "js_code_v4"))
                   )
                 )
               )
@@ -282,6 +265,34 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 title = div("Rows Selected", style = "font-weight: bold; text-align: center"),
                 width = 12,
                 verbatimTextOutput(NS(id, "rows_selected_v4"))
+              )
+            )
+          ),
+          fluidRow(
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("DT::renderDT Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    uiOutput(NS(id, "code_v4"))
+                  )
+                )
+              )
+            ),
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("JS Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    verbatimTextOutput(NS(id, "js_code_v4"))
+                  )
+                )
               )
             )
           )
@@ -310,7 +321,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
           ),
           fluidRow(
             column(
-              width = 5,
+              width = 12,
               shinydashboard::box(
                 title = div("Table", style = "font-weight: bold; text-align: center"),
                 width = 12,
@@ -319,31 +330,6 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                     width = 12,
                     align = "center",
                     DT::DTOutput(NS(id, "table_v5"))
-                  )
-                )
-              )
-            ),
-            column(
-              width = 7,
-              shinydashboard::box(
-                title = div("Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                collapsible = TRUE,
-                collapsed = TRUE,
-                fluidRow(
-                  column(
-                    width = 12,
-                    uiOutput(NS(id, "code_v5"))
-                  )
-                )
-              ),
-              shinydashboard::box(
-                title = div("JS Code", style = "font-weight: bold; text-align: center"),
-                width = 12,
-                fluidRow(
-                  column(
-                    width = 12,
-                    verbatimTextOutput(NS(id, "js_code_v5"))
                   )
                 )
               )
@@ -356,6 +342,34 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 title = div("Rows Selected", style = "font-weight: bold; text-align: center"),
                 width = 12,
                 verbatimTextOutput(NS(id, "rows_selected_v5"))
+              )
+            )
+          ),
+          fluidRow(
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("DT::renderDT Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    uiOutput(NS(id, "code_v5"))
+                  )
+                )
+              )
+            ),
+            column(
+              width = 6,
+              shinydashboard::box(
+                title = div("JS Code", style = "font-weight: bold; text-align: center"),
+                width = 12,
+                fluidRow(
+                  column(
+                    width = 12,
+                    verbatimTextOutput(NS(id, "js_code_v5"))
+                  )
+                )
               )
             )
           )
@@ -376,20 +390,20 @@ mod_embedded_checkbox_in_table_server <- function(id){
       dplyr::select(Petal.Length, Petal.Width, Species)
 
     table_v1_code <- '
-      output$table_v1 <- DT::renderDT({
-        DT::datatable(
-          data,
-          selection = "none",
-          options = list(
-            dom = "Blrtip",
-            paging = TRUE,
-            scrollX = TRUE,
-            pageLength = 5
-          ),
-          rownames = FALSE
-        )
-      })
-    '
+output$table_v1 <- DT::renderDT({
+  DT::datatable(
+    data,
+    selection = "none",
+    options = list(
+      dom = "Blrtip",
+      paging = TRUE,
+      scrollX = TRUE,
+      pageLength = 5
+    ),
+    rownames = FALSE
+  )
+})
+'
 
     eval(parse(text = table_v1_code))
     
@@ -398,27 +412,27 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     table_v2_code <- "
-      output$table_v2 <- DT::renderDT({
-        # Read the JS file, replace placeholder with the actual namespace
-        js_string <- readLines(\"inst/app/www/checkbox_v2.js\") |> paste(collapse = \"\n\")
-        js_ns <- gsub('<<NS>>', ns(\"v2_selected_rows\"), js_string)
-        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
-        
-        DT::datatable(
-          data |> dplyr::select(select, everything()),
-          selection = \"none\",
-          escape = FALSE,
-          options = list(
-            dom = 'Blrtip',
-            paging = TRUE,
-            scrollX = TRUE,
-            pageLength = 5
-          ),
-          callback = htmlwidgets::JS(js_ns),
-          rownames = FALSE
-        )
-      })
-    "
+output$table_v2 <- DT::renderDT({
+  # Read the JS file, replace placeholder with the actual namespace
+  js_string <- readLines(\"inst/app/www/checkbox_v2.js\") |> paste(collapse = \"\\n\")
+  js_ns <- gsub('<<NS>>', ns(\"v2_selected_rows\"), js_string)
+  data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+  
+  DT::datatable(
+    data |> dplyr::select(select, everything()),
+    selection = \"none\",
+    escape = FALSE,
+    options = list(
+      dom = 'Blrtip',
+      paging = TRUE,
+      scrollX = TRUE,
+      pageLength = 5
+    ),
+    callback = htmlwidgets::JS(js_ns),
+    rownames = FALSE
+  )
+})
+"
 
     eval(parse(text = table_v2_code))
 
@@ -435,27 +449,27 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     table_v3_code <- "
-      output$table_v3 <- DT::renderDT({
-        # Read the JS file, replace placeholder with the actual namespace
-        js_string <- readLines(\"inst/app/www/checkbox_v3.js\") |> paste(collapse = \"\n\")
-        js_ns <- gsub('<<NS>>', ns(\"v3_selected_rows\"), js_string)
-        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
-        
-        DT::datatable(
-          data |> dplyr::select(select, everything()),
-          selection = \"none\",
-          escape = FALSE,
-          options = list(
-            dom = 'Blrtip',
-            paging = TRUE,
-            scrollX = TRUE,
-            pageLength = 5
-          ),
-          callback = htmlwidgets::JS(js_ns),
-          rownames = FALSE
-        )
-      })
-    "
+  output$table_v3 <- DT::renderDT({
+    # Read the JS file, replace placeholder with the actual namespace
+    js_string <- readLines(\"inst/app/www/checkbox_v3.js\") |> paste(collapse = \"\\n\")
+    js_ns <- gsub('<<NS>>', ns(\"v3_selected_rows\"), js_string)
+    data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+    
+    DT::datatable(
+      data |> dplyr::select(select, everything()),
+      selection = \"none\",
+      escape = FALSE,
+      options = list(
+        dom = 'Blrtip',
+        paging = TRUE,
+        scrollX = TRUE,
+        pageLength = 5
+      ),
+      callback = htmlwidgets::JS(js_ns),
+      rownames = FALSE
+    )
+  })
+"
     
     eval(parse(text = table_v3_code))
 
@@ -472,42 +486,42 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     table_v4_code <- "
-      output$table_v4 <- DT::renderDT({
-        # Read the JS file, replace placeholder with the actual namespace
-        js_string <- readLines(\"inst/app/www/checkbox_v4.js\") |> paste(collapse = \"\n\")
-        js_ns <- js_ns <- stringr::str_replace_all(js_string, c(
-          '<<NS_ROWS>>' = ns(\"v4_selected_rows\"),
-          '<<NS_SELECTALL>>' = ns(\"v4_select_all\")
-        ))
-        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
-        
-        DT::datatable(
-          data |> dplyr::select(select, everything()),
-          selection = \"none\",
-          escape = FALSE,
-          options = list(
-            dom = 'Blrtip',
-            paging = TRUE,
-            scrollX = TRUE,
-            pageLength = 5,
-            columnDefs = list(
-              list(
-                targets = 0, 
-                orderable = FALSE,
-                searchable = FALSE,
-                title = sprintf(
-                  '<label for=\"%s\">Select All: </label> <input type=\"checkbox\" id=\"%s\">', 
-                  ns(\"v4_select_all\"), 
-                  ns(\"v4_select_all\")
-                )
-              )
-            )
-          ),
-          callback = htmlwidgets::JS(js_ns),
-          rownames = FALSE
+output$table_v4 <- DT::renderDT({
+  # Read the JS file, replace placeholder with the actual namespace
+  js_string <- readLines(\"inst/app/www/checkbox_v4.js\") |> paste(collapse = \"\\n\")
+  js_ns <- js_ns <- stringr::str_replace_all(js_string, c(
+    '<<NS_ROWS>>' = ns(\"v4_selected_rows\"),
+    '<<NS_SELECTALL>>' = ns(\"v4_select_all\")
+  ))
+  data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+  
+  DT::datatable(
+    data |> dplyr::select(select, everything()),
+    selection = \"none\",
+    escape = FALSE,
+    options = list(
+      dom = 'Blrtip',
+      paging = TRUE,
+      scrollX = TRUE,
+      pageLength = 5,
+      columnDefs = list(
+        list(
+          targets = 0, 
+          orderable = FALSE,
+          searchable = FALSE,
+          title = sprintf(
+            '<label for=\"%s\">Select All: </label> <input type=\"checkbox\" id=\"%s\">', 
+            ns(\"v4_select_all\"), 
+            ns(\"v4_select_all\")
+          )
         )
-      })
-    "
+      )
+    ),
+    callback = htmlwidgets::JS(js_ns),
+    rownames = FALSE
+  )
+})
+"
 
     eval(parse(text = table_v4_code))
 
@@ -524,42 +538,42 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     table_v5_code = "
-      output$table_v5 <- DT::renderDT({
-        # Read the JS file, replace placeholder with the actual namespace
-        js_string <- readLines(\"inst/app/www/checkbox_v5.js\") |> paste(collapse = \"\n\")
-        js_ns <- stringr::str_replace_all(js_string, c(
-          '<<NS_ROWS>>' = ns(\"v5_selected_rows\"),
-          '<<NS_SELECTALL>>' = ns(\"v5_select_all\")
-        ))
-        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
-        
-        DT::datatable(
-          data |> dplyr::select(select, everything()),
-          selection = \"none\",
-          escape = FALSE,
-          options = list(
-            dom = 'Blrtip',
-            paging = TRUE,
-            scrollX = TRUE,
-            pageLength = 5,
-            columnDefs = list(
-              list(
-                targets = 0, 
-                orderable = FALSE,
-                searchable = FALSE,
-                title = sprintf(
-                  '<label for=\"%s\">Select All: </label> <input type=\"checkbox\" id=\"%s\">', 
-                  ns(\"v5_select_all\"), 
-                  ns(\"v5_select_all\")
-                )
-              )
-            )
-          ),
-          callback = htmlwidgets::JS(js_ns),
-          rownames = FALSE
+output$table_v5 <- DT::renderDT({
+  # Read the JS file, replace placeholder with the actual namespace
+  js_string <- readLines(\"inst/app/www/checkbox_v5.js\") |> paste(collapse = \"\\n\")
+  js_ns <- stringr::str_replace_all(js_string, c(
+    '<<NS_ROWS>>' = ns(\"v5_selected_rows\"),
+    '<<NS_SELECTALL>>' = ns(\"v5_select_all\")
+  ))
+  data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+  
+  DT::datatable(
+    data |> dplyr::select(select, everything()),
+    selection = \"none\",
+    escape = FALSE,
+    options = list(
+      dom = 'Blrtip',
+      paging = TRUE,
+      scrollX = TRUE,
+      pageLength = 5,
+      columnDefs = list(
+        list(
+          targets = 0, 
+          orderable = FALSE,
+          searchable = FALSE,
+          title = sprintf(
+            '<label for=\"%s\">Select All: </label> <input type=\"checkbox\" id=\"%s\">', 
+            ns(\"v5_select_all\"), 
+            ns(\"v5_select_all\")
+          )
         )
-      }, server = FALSE)
-    "
+      )
+    ),
+    callback = htmlwidgets::JS(js_ns),
+    rownames = FALSE
+  )
+}, server = FALSE)
+"
 
     eval(parse(text = table_v5_code))
 
