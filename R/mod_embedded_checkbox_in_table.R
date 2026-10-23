@@ -415,18 +415,23 @@ mod_embedded_checkbox_in_table_server <- function(id){
     output$table_v2 <- DT::renderDT({
       # Read the JS file, replace placeholder with the actual namespace
       js_string <- readLines("inst/app/www/checkbox_v2.js") |> paste(collapse = "\n")
-      js_ns <- sub("<<NS>>", ns("v2_selected_rows"), js_string)
-      render_checkbox_dt(
-        data = iris |> dplyr::select(Petal.Length, Petal.Width, Species),
-        ns = ns,
-        selected_input = "v2_selected_rows",
+      js_ns <- gsub('<<NS>>', ns("v2_selected_rows"), js_string)
+      DT::datatable(
+        iris |> 
+          dplyr::mutate(
+            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
+          ) |> 
+          dplyr::select(select, Petal.Length, Petal.Width, Species),
+        selection = "none",
+        escape = FALSE,
         options = list(
           dom = 'Blrtip',
           paging = TRUE,
           scrollX = TRUE,
           pageLength = 5
         ),
-        js_callback = htmlwidgets::JS(js_ns)
+        callback = htmlwidgets::JS(js_ns),
+        rownames = FALSE
       )
     })
     
@@ -482,18 +487,17 @@ mod_embedded_checkbox_in_table_server <- function(id){
       paste0(input$v2_selected_rows)
     })
     
+
     output$table_v3 <- DT::renderDT({
+      # Read the JS file, replace placeholder with the actual namespace
+      js_string <- readLines("inst/app/www/checkbox_v3.js") |> paste(collapse = "\n")
+      js_ns <- gsub('<<NS>>', ns("v3_selected_rows"), js_string)
       DT::datatable(
         iris |> 
           dplyr::mutate(
             select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
           ) |> 
-          dplyr::select(
-            select,
-            Petal.Length,
-            Petal.Width,
-            Species
-          ),
+          dplyr::select(select, Petal.Length, Petal.Width, Species),
         selection = "none",
         escape = FALSE,
         options = list(
@@ -502,23 +506,7 @@ mod_embedded_checkbox_in_table_server <- function(id){
           scrollX = TRUE,
           pageLength = 5
         ),
-        callback = htmlwidgets::JS(sprintf("
-        var selectedRows = {};
-          table.on('draw', function() {
-
-          // Rebind individual checkbox change
-          table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-            var val = $(this).val();
-            selectedRows[val] = this.checked;
-
-            var selected = Object.keys(selectedRows).filter(function(key){
-              return selectedRows[key];
-            });
-            Shiny.setInputValue('%s', selected);
-          })
-        });
-        ", ns("v3_selected_rows")
-        )),
+        callback = htmlwidgets::JS(js_ns),
         rownames = FALSE
       )
     })
@@ -567,35 +555,7 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     output$js_code_v3 <- renderText({
-"htmlwidgets::JS(sprintf('
-  // Initialise the selectedRows object
-  var selectedRows = {};
-  
-  // When the table first draws...
-  table.on('draw', function() {
-  
-    // 1. Look in the table rows and find the checkboxes 
-    // 2. Remove any previous bindings to those checkboxes
-    // 3. Create new event bindings
-    table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-    
-      // Store the row number of each checkbox under the variable val.
-      var val = $(this).val();
-      
-      // In selectedRows assign the 'key': val as the value of the checkbox
-      selectedRows[val] = this.checked;
-      
-      // Filter selectedRows by the keys that are true and assign to the variable selected
-      var selected = Object.keys(selectedRows).filter(function(key){
-        return selectedRows[key];
-      });
-      
-      // Send selected values to Shiny
-      Shiny.setInputValue('%s', selected);
-    })
-  });
-  ', ns('v3_selected_rows')
-))"
+      readLines("inst/app/www/checkbox_v3.js") |> paste(collapse = "\n")
     })
     
     output$rows_selected_v3 = renderText({
