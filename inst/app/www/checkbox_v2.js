@@ -13,6 +13,7 @@ table.on('draw', function(){
       selected.push($(this).val());
     });
     // Send the selected values back to Shiny
+    // We're using <<NS>> as a placeholder for the namespaced input value
     Shiny.setInputValue('<<NS>>', selected);
   });
 });
