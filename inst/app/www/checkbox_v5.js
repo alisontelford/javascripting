@@ -1,5 +1,3 @@
-// checkbox_v5.js
-
 // Initialise the selectedRows object
 var selectedRows = {};
           

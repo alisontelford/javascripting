@@ -1,5 +1,3 @@
-// checkbox_v2.js
-
 // When the table first draws...
 table.on('draw', function(){
   // Attach a change handler to all checkboxes, when a change is detected

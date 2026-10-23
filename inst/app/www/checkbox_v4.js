@@ -1,5 +1,3 @@
-// checkbox_v4.js
-
 // Initialise the selectedRows object
 var selectedRows = {};
     // When the table first draws...
