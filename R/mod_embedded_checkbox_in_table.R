@@ -369,7 +369,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
 #'
 #' @noRd 
 mod_embedded_checkbox_in_table_server <- function(id){
-  moduleServer(id, function(input, output, session){
+  shiny::moduleServer(id, function(input, output, session){
     ns <- session$ns
     
     output$table_v1 <- DT::renderDT({
@@ -411,48 +411,66 @@ mod_embedded_checkbox_in_table_server <- function(id){
   )
 })"
     })
-    
+
     output$table_v2 <- DT::renderDT({
-      DT::datatable(
-        iris |> 
-          dplyr::mutate(
-            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
-          ) |> 
-          dplyr::select(
-            select,
-            Petal.Length,
-            Petal.Width,
-            Species
-          ),
-        selection = "none",
-        escape = FALSE,
+      # Read the JS file, replace placeholder with the actual namespace
+      js_string <- readLines("inst/app/www/checkbox_v2.js") |> paste(collapse = "\n")
+      js_ns <- sub("<<NS>>", ns("v2_selected_rows"), js_string)
+      render_checkbox_dt(
+        data = iris |> dplyr::select(Petal.Length, Petal.Width, Species),
+        ns = ns,
+        selected_input = "v2_selected_rows",
         options = list(
           dom = 'Blrtip',
           paging = TRUE,
           scrollX = TRUE,
           pageLength = 5
         ),
-        callback = htmlwidgets::JS(sprintf("
-          // When the table first draws...
-          table.on('draw', function(){
-            // Attach a change handler to all checkboxes, when a change is detected run the following
-            $('.row_checkbox').on('change', function(){
-              // Create a new variable to store the selected rows
-              var selected = [];
-              // When a checkbox is ticked...
-              $('.row_checkbox:checked').each(function(){
-                // Assign the value of the checkbox to the variable 'selected'
-                selected.push($(this).val());
-              });
-              // Send selected values to Shiny
-              Shiny.setInputValue('%s', selected);
-            })
-          });
-        ", ns("v2_selected_rows")
-        )),
-        rownames = FALSE
+        js_callback = htmlwidgets::JS(js_ns)
       )
     })
+    
+    # output$table_v2 <- DT::renderDT({
+    #   DT::datatable(
+    #     iris |> 
+    #       dplyr::mutate(
+    #         select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
+    #       ) |> 
+    #       dplyr::select(
+    #         select,
+    #         Petal.Length,
+    #         Petal.Width,
+    #         Species
+    #       ),
+    #     selection = "none",
+    #     escape = FALSE,
+    #     options = list(
+    #       dom = 'Blrtip',
+    #       paging = TRUE,
+    #       scrollX = TRUE,
+    #       pageLength = 5
+    #     ),
+    #     callback = htmlwidgets::JS(sprintf("
+    #       // When the table first draws...
+    #       table.on('draw', function(){
+    #         // Attach a change handler to all checkboxes, when a change is detected run the following
+    #         $('.row_checkbox').on('change', function(){
+    #           // Create a new variable to store the selected rows
+    #           var selected = [];
+    #           // When a checkbox is ticked...
+    #           $('.row_checkbox:checked').each(function(){
+    #             // Assign the value of the checkbox to the variable 'selected'
+    #             selected.push($(this).val());
+    #           });
+    #           // Send selected values to Shiny
+    #           Shiny.setInputValue('%s', selected);
+    #         })
+    #       });
+    #     ", ns("v2_selected_rows")
+    #     )),
+    #     rownames = FALSE
+    #   )
+    # })
     
     output$code_v2 <- renderText({
 "DT::renderDT({
