@@ -38,7 +38,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 fluidRow(
                   column(
                     width = 12,
-                    verbatimTextOutput(NS(id, "code_v1"))
+                    uiOutput(NS(id, "code_v1"))
                   )
                 )
               )
@@ -99,7 +99,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 fluidRow(
                   column(
                     width = 12,
-                    verbatimTextOutput(NS(id, "code_v2"))
+                    uiOutput(NS(id, "code_v2"))
                   )
                 )
               ),
@@ -180,7 +180,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 fluidRow(
                   column(
                     width = 12,
-                    verbatimTextOutput(NS(id, "code_v3"))
+                    uiOutput(NS(id, "code_v3"))
                   )
                 )
               ),
@@ -259,7 +259,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 fluidRow(
                   column(
                     width = 12,
-                    verbatimTextOutput(NS(id, "code_v4"))
+                    uiOutput(NS(id, "code_v4"))
                   )
                 )
               ),
@@ -333,7 +333,7 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
                 fluidRow(
                   column(
                     width = 12,
-                    verbatimTextOutput(NS(id, "code_v5"))
+                    uiOutput(NS(id, "code_v5"))
                   )
                 )
               ),
@@ -371,112 +371,59 @@ mod_embedded_checkbox_in_table_ui <- function(id) {
 mod_embedded_checkbox_in_table_server <- function(id){
   shiny::moduleServer(id, function(input, output, session){
     ns <- session$ns
-    
-    output$table_v1 <- DT::renderDT({
-      DT::datatable(
-        iris |> 
-          dplyr::select(
-            Petal.Length,
-            Petal.Width,
-            Species
-          ),
-        selection = "none",
-        options = list(
-          dom = 'Blrtip',
-          paging = TRUE,
-          scrollX = TRUE,
-          pageLength = 5
-        ),
-        rownames = FALSE
-      )
-    })
-    
-    output$code_v1 <- renderText({
-"DT::renderDT({
-  DT::datatable(
-    iris |> 
-      dplyr::select(
-        Petal.Length,
-        Petal.Width,
-        Species
-      ),
-    selection = 'none',
-    options = list(
-      dom = 'Blrtip',
-      paging = TRUE,
-      scrollX = TRUE,
-      pageLength = 5
-    ),
-    rownames = FALSE
-  )
-})"
-    })
 
-    output$table_v2 <- DT::renderDT({
-      # Read the JS file, replace placeholder with the actual namespace
-      js_string <- readLines("inst/app/www/checkbox_v2.js") |> paste(collapse = "\n")
-      js_ns <- gsub('<<NS>>', ns("v2_selected_rows"), js_string)
-      DT::datatable(
-        iris |> 
-          dplyr::mutate(
-            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
-          ) |> 
-          dplyr::select(select, Petal.Length, Petal.Width, Species),
-        selection = "none",
-        escape = FALSE,
-        options = list(
-          dom = 'Blrtip',
-          paging = TRUE,
-          scrollX = TRUE,
-          pageLength = 5
-        ),
-        callback = htmlwidgets::JS(js_ns),
-        rownames = FALSE
-      )
+    data <- iris |> 
+      dplyr::select(Petal.Length, Petal.Width, Species)
+
+    table_v1_code <- '
+      output$table_v1 <- DT::renderDT({
+        DT::datatable(
+          data,
+          selection = "none",
+          options = list(
+            dom = "Blrtip",
+            paging = TRUE,
+            scrollX = TRUE,
+            pageLength = 5
+          ),
+          rownames = FALSE
+        )
+      })
+    '
+
+    eval(parse(text = table_v1_code))
+    
+    output$code_v1 <- renderUI({
+      tags$pre(table_v1_code)
     })
     
-    output$code_v2 <- renderText({
-  "DT::renderDT({
-    DT::datatable(
-      iris |> 
-        dplyr::mutate(
-          select = sprintf('<input type='checkbox' class='row_checkbox' value='%s'>', dplyr::row_number())
-        ) |> 
-        dplyr::select(
-          select,
-          Petal.Length,
-          Petal.Width,
-          Species
-        ),
-      selection = 'none',
-      escape = FALSE,
-      options = list(
-        dom = 'Blrtip',
-        paging = TRUE,
-        scrollX = TRUE,
-        pageLength = 5
-      ),
-      callback = htmlwidgets::JS(sprintf('
-        // When the table first draws...
-        table.on('draw', function(){
-          // Attach a change handler to all checkboxes, when a change is detected run the following
-          $('.row_checkbox').on('change', function(){
-            // Create a new variable to store the selected rows
-            var selected = [];
-            // When a checkbox is ticked...
-            $('.row_checkbox:checked').each(function(){
-              // Assign the value of the checkbox to the variable 'selected'
-              selected.push($(this).val());
-            });
-            // Send selected values to Shiny
-            Shiny.setInputValue('%s', selected);
-          })
-        });
-      ', ns('v2_selected_rows')
-      )),
-      rownames = FALSE
-    )
-  })"
+    table_v2_code <- "
+      output$table_v2 <- DT::renderDT({
+        # Read the JS file, replace placeholder with the actual namespace
+        js_string <- readLines(\"inst/app/www/checkbox_v2.js\") |> paste(collapse = \"\n\")
+        js_ns <- gsub('<<NS>>', ns(\"v2_selected_rows\"), js_string)
+        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+        
+        DT::datatable(
+          data |> dplyr::select(select, everything()),
+          selection = \"none\",
+          escape = FALSE,
+          options = list(
+            dom = 'Blrtip',
+            paging = TRUE,
+            scrollX = TRUE,
+            pageLength = 5
+          ),
+          callback = htmlwidgets::JS(js_ns),
+          rownames = FALSE
+        )
+      })
+    "
+
+    eval(parse(text = table_v2_code))
+
+    output$code_v2 <- renderUI({
+      tags$pre(table_v2_code)
     })
     
     output$js_code_v2 <- renderText({
@@ -487,71 +434,33 @@ mod_embedded_checkbox_in_table_server <- function(id){
       paste0(input$v2_selected_rows)
     })
     
-
-    output$table_v3 <- DT::renderDT({
-      # Read the JS file, replace placeholder with the actual namespace
-      js_string <- readLines("inst/app/www/checkbox_v3.js") |> paste(collapse = "\n")
-      js_ns <- gsub('<<NS>>', ns("v3_selected_rows"), js_string)
-      DT::datatable(
-        iris |> 
-          dplyr::mutate(
-            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
-          ) |> 
-          dplyr::select(select, Petal.Length, Petal.Width, Species),
-        selection = "none",
-        escape = FALSE,
-        options = list(
-          dom = 'Blrtip',
-          paging = TRUE,
-          scrollX = TRUE,
-          pageLength = 5
-        ),
-        callback = htmlwidgets::JS(js_ns),
-        rownames = FALSE
-      )
-    })
-    
-    output$code_v3 <- renderText({
-"DT::renderDT({
-  DT::datatable(
-    iris |> 
-      dplyr::mutate(
-        select = sprintf('<input type='checkbox' class='row_checkbox' value='%s'>', dplyr::row_number())
-      ) |> 
-      dplyr::select(
-        select,
-        Petal.Length,
-        Petal.Width,
-        Species
-      ),
-    selection = 'none',
-    escape = FALSE,
-    options = list(
-      dom = 'Blrtip',
-      paging = TRUE,
-      scrollX = TRUE,
-      pageLength = 5
-    ),
-    callback = htmlwidgets::JS(sprintf('
-      var selectedRows = {};
-      table.on('draw', function() {
+    table_v3_code <- "
+      output$table_v3 <- DT::renderDT({
+        # Read the JS file, replace placeholder with the actual namespace
+        js_string <- readLines(\"inst/app/www/checkbox_v3.js\") |> paste(collapse = \"\n\")
+        js_ns <- gsub('<<NS>>', ns(\"v3_selected_rows\"), js_string)
+        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
         
-        // Rebind individual checkbox change
-        table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-          var val = $(this).val();
-          selectedRows[val] = this.checked;
-          
-          var selected = Object.keys(selectedRows).filter(function(key){
-            return selectedRows[key];
-          });
-          Shiny.setInputValue('%s', selected);
-        })
-      });
-      ', ns('v3_selected_rows')
-    )),
-    rownames = FALSE
-  )
-})"
+        DT::datatable(
+          data |> dplyr::select(select, everything()),
+          selection = \"none\",
+          escape = FALSE,
+          options = list(
+            dom = 'Blrtip',
+            paging = TRUE,
+            scrollX = TRUE,
+            pageLength = 5
+          ),
+          callback = htmlwidgets::JS(js_ns),
+          rownames = FALSE
+        )
+      })
+    "
+    
+    eval(parse(text = table_v3_code))
+
+    output$code_v3 <- renderUI({
+      tags$pre(table_v3_code)
     })
     
     output$js_code_v3 <- renderText({
@@ -562,108 +471,48 @@ mod_embedded_checkbox_in_table_server <- function(id){
       paste0(input$v3_selected_rows)
     })
     
-    output$table_v4 <- DT::renderDT({
-      # Read the JS file, replace placeholder with the actual namespace
-      js_string <- readLines("inst/app/www/checkbox_v4.js") |> paste(collapse = "\n")
-      js_ns <- js_ns <- stringr::str_replace_all(js_string, c(
-        "<<NS_ROWS>>" = ns("v4_selected_rows"),
-        "<<NS_SELECTALL>>" = ns("v4_select_all")
-      ))
-
-      DT::datatable(
-        iris |> 
-          dplyr::mutate(
-            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
-          ) |> 
-          dplyr::select(select, Petal.Length, Petal.Width, Species),
-        selection = "none",
-        escape = FALSE,
-        options = list(
-          dom = 'Blrtip',
-          paging = TRUE,
-          scrollX = TRUE,
-          pageLength = 5,
-          columnDefs = list(
-            list(
-              targets = 0, 
-              orderable = FALSE,
-              searchable = FALSE,
-              title = sprintf(
-                '<label for="%s">Select All: </label> <input type="checkbox" id="%s">', 
-                ns("v4_select_all"), 
-                ns("v4_select_all")
+    table_v4_code <- "
+      output$table_v4 <- DT::renderDT({
+        # Read the JS file, replace placeholder with the actual namespace
+        js_string <- readLines(\"inst/app/www/checkbox_v4.js\") |> paste(collapse = \"\n\")
+        js_ns <- js_ns <- stringr::str_replace_all(js_string, c(
+          '<<NS_ROWS>>' = ns(\"v4_selected_rows\"),
+          '<<NS_SELECTALL>>' = ns(\"v4_select_all\")
+        ))
+        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+        
+        DT::datatable(
+          data |> dplyr::select(select, everything()),
+          selection = \"none\",
+          escape = FALSE,
+          options = list(
+            dom = 'Blrtip',
+            paging = TRUE,
+            scrollX = TRUE,
+            pageLength = 5,
+            columnDefs = list(
+              list(
+                targets = 0, 
+                orderable = FALSE,
+                searchable = FALSE,
+                title = sprintf(
+                  '<label for=\"%s\">Select All: </label> <input type=\"checkbox\" id=\"%s\">', 
+                  ns(\"v4_select_all\"), 
+                  ns(\"v4_select_all\")
+                )
               )
             )
-          )
-        ),
-        callback = htmlwidgets::JS(js_ns),
-        rownames = FALSE
-      )
-    })
-    
-    output$code_v4 <- renderText({
-"DT::renderDT({
-  DT::datatable(
-    iris |> 
-      dplyr::mutate(
-        select = sprintf('<input type='checkbox' class='row_checkbox' value='%s'>', dplyr::row_number())
-      ) |> 
-      dplyr::select(
-        select,
-        Petal.Length,
-        Petal.Width,
-        Species
-      ),
-    selection = 'none',
-    escape = FALSE,
-    options = list(
-      dom = 'Blrtip',
-      paging = TRUE,
-      scrollX = TRUE,
-      pageLength = 5
-    ),
-    callback = htmlwidgets::JS(sprintf('
-      var selectedRows = {};
-      table.on('draw', function() {
-      
-        // Restore checkbox states
-        table.rows().nodes().to$().find('.row_checkbox').each(function(){
-          var val = $(this).val();
-          $(this).prop('checked', selectedRows[val] === true);
-        });
-        
-        // Rebind individual checkbox change
-        table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-          var val = $(this).val();
-          selectedRows[val] = this.checked;
-          
-          var selected = Object.keys(selectedRows).filter(function(key){
-            return selectedRows[key];
-          });
-          Shiny.setInputValue('%s', selected);
-        })
-        
-        // Rebind Select All checkbox
-        $('#%s').off('click').on('click', function(){
-          var checked = this.checked;
+          ),
+          callback = htmlwidgets::JS(js_ns),
+          rownames = FALSE
+        )
+      })
+    "
 
-          table.rows().nodes().to$().find('.row_checkbox').each(function(){
-            var val = $(this).val();
-            $(this).prop('checked', checked);
-            selectedRows[val] = checked;
-          });
+    eval(parse(text = table_v4_code))
 
-          var selected = Object.keys(selectedRows).filter(function(key){
-            return selectedRows[key];
-          });
-          Shiny.setInputValue('%s', selected);
-        });
-      });
-      ', ns('v4_selected_rows'), ns('v4_select_all'), ns('v4_selected_rows')
-    )),
-    rownames = FALSE
-  )
-})"
+    output$code_v4 <- renderUI({
+      tags$pre(table_v4_code)
     })
     
     output$js_code_v4 <- renderText({
@@ -674,105 +523,48 @@ mod_embedded_checkbox_in_table_server <- function(id){
       paste0(input$v4_selected_rows)
     })
     
-    output$table_v5 <- DT::renderDT({
-      # Read the JS file, replace placeholder with the actual namespace
-      js_string <- readLines("inst/app/www/checkbox_v5.js") |> paste(collapse = "\n")
-      js_ns <- js_ns <- stringr::str_replace_all(js_string, c(
-        "<<NS_ROWS>>" = ns("v5_selected_rows"),
-        "<<NS_SELECTALL>>" = ns("v5_select_all")
-      ))
-      DT::datatable(
-        iris |> 
-          dplyr::mutate(
-            select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
-          ) |> 
-          dplyr::select(select, Petal.Length, Petal.Width, Species),
-        selection = "none",
-        escape = FALSE,
-        options = list(
-          dom = 'Blrtip',
-          paging = TRUE,
-          scrollX = TRUE,
-          pageLength = 5,
-          columnDefs = list(
-            list(
-              targets = 0, 
-              orderable = FALSE,
-              searchable = FALSE,
-              title = sprintf(
-                '<label for="%s">Select All: </label> <input type="checkbox" id="%s">', 
-                ns("v5_select_all"), 
-                ns("v5_select_all")
+    table_v5_code = "
+      output$table_v5 <- DT::renderDT({
+        # Read the JS file, replace placeholder with the actual namespace
+        js_string <- readLines(\"inst/app/www/checkbox_v5.js\") |> paste(collapse = \"\n\")
+        js_ns <- stringr::str_replace_all(js_string, c(
+          '<<NS_ROWS>>' = ns(\"v5_selected_rows\"),
+          '<<NS_SELECTALL>>' = ns(\"v5_select_all\")
+        ))
+        data$select <- sprintf('<input type=\"checkbox\" class=\"row_checkbox\" value=\"%s\">', seq_len(nrow(data)))
+        
+        DT::datatable(
+          data |> dplyr::select(select, everything()),
+          selection = \"none\",
+          escape = FALSE,
+          options = list(
+            dom = 'Blrtip',
+            paging = TRUE,
+            scrollX = TRUE,
+            pageLength = 5,
+            columnDefs = list(
+              list(
+                targets = 0, 
+                orderable = FALSE,
+                searchable = FALSE,
+                title = sprintf(
+                  '<label for=\"%s\">Select All: </label> <input type=\"checkbox\" id=\"%s\">', 
+                  ns(\"v5_select_all\"), 
+                  ns(\"v5_select_all\")
+                )
               )
             )
-          )
-        ),
-        callback = htmlwidgets::JS(js_ns),
-        rownames = FALSE
-      )
-    }, server = FALSE)
-    
-    output$code_v5 <- renderText({
-"DT::renderDT({
-  DT::datatable(
-    iris |> 
-      dplyr::mutate(
-        select = sprintf('<input type='checkbox' class='row_checkbox' value='%s'>', dplyr::row_number())
-      ) |> 
-      dplyr::select(
-        select,
-        Petal.Length,
-        Petal.Width,
-        Species
-      ),
-    selection = 'none',
-    escape = FALSE,
-    options = list(
-      dom = 'Blrtip',
-      paging = TRUE,
-      scrollX = TRUE,
-      pageLength = 5
-    ),
-    callback = htmlwidgets::JS(sprintf('
-      var selectedRows = {};
-      
-      // Restore checkbox states
-      table.rows().nodes().to$().find('.row_checkbox').each(function(){
-        var val = $(this).val();
-        $(this).prop('checked', selectedRows[val] === true);
-      });
-      
-      // Rebind individual checkbox change
-      table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-        var val = $(this).val();
-        selectedRows[val] = this.checked;
-        
-        var selected = Object.keys(selectedRows).filter(function(key){
-          return selectedRows[key];
-        });
-        Shiny.setInputValue('%s', selected);
-      })
-      
-      // Rebind Select All checkbox
-      $('#%s').off('click').on('click', function(){
-        var checked = this.checked;
+          ),
+          callback = htmlwidgets::JS(js_ns),
+          rownames = FALSE
+        )
+      }, server = FALSE)
+    "
 
-        table.rows().nodes().to$().find('.row_checkbox').each(function(){
-          var val = $(this).val();
-          $(this).prop('checked', checked);
-          selectedRows[val] = checked;
-        });
+    eval(parse(text = table_v5_code))
 
-        var selected = Object.keys(selectedRows).filter(function(key){
-          return selectedRows[key];
-        });
-        Shiny.setInputValue('%s', selected);
-      });
-      ', ns('v5_selected_rows'), ns('v5_select_all'), ns('v5_selected_rows')
-    )),
-    rownames = FALSE
-  )
-}, server = FALSE)"
+    output$code_v5 <- renderUI({
+      tags$pre(table_v5_code)
     })
     
     output$js_code_v5 <- renderText({
