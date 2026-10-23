@@ -686,12 +686,7 @@ mod_embedded_checkbox_in_table_server <- function(id){
           dplyr::mutate(
             select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
           ) |> 
-          dplyr::select(
-            select,
-            Petal.Length,
-            Petal.Width,
-            Species
-          ),
+          dplyr::select(select, Petal.Length, Petal.Width, Species),
         selection = "none",
         escape = FALSE,
         options = list(
