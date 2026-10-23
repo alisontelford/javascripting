@@ -563,17 +563,19 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     output$table_v4 <- DT::renderDT({
+      # Read the JS file, replace placeholder with the actual namespace
+      js_string <- readLines("inst/app/www/checkbox_v4.js") |> paste(collapse = "\n")
+      js_ns <- js_ns <- stringr::str_replace_all(js_string, c(
+        "<<NS_ROWS>>" = ns("v4_selected_rows"),
+        "<<NS_SELECTALL>>" = ns("v4_select_all")
+      ))
+
       DT::datatable(
         iris |> 
           dplyr::mutate(
             select = sprintf('<input type="checkbox" class="row_checkbox" value="%s">', dplyr::row_number())
           ) |> 
-          dplyr::select(
-            select,
-            Petal.Length,
-            Petal.Width,
-            Species
-          ),
+          dplyr::select(select, Petal.Length, Petal.Width, Species),
         selection = "none",
         escape = FALSE,
         options = list(
@@ -594,45 +596,7 @@ mod_embedded_checkbox_in_table_server <- function(id){
             )
           )
         ),
-        callback = htmlwidgets::JS(sprintf("
-        var selectedRows = {};
-        table.on('draw', function() {
-          
-          // Restore checkbox states
-          table.rows().nodes().to$().find('.row_checkbox').each(function(){
-            var val = $(this).val();
-            $(this).prop('checked', selectedRows[val] === true);
-          });
-
-          // Rebind individual checkbox change
-          table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-            var val = $(this).val();
-            selectedRows[val] = this.checked;
-
-            var selected = Object.keys(selectedRows).filter(function(key){
-              return selectedRows[key];
-            });
-            Shiny.setInputValue('%s', selected);
-          })
-          
-          // Rebind Select All checkbox
-          $('#%s').off('click').on('click', function(){
-            var checked = this.checked;
-
-            table.rows().nodes().to$().find('.row_checkbox').each(function(){
-              var val = $(this).val();
-              $(this).prop('checked', checked);
-              selectedRows[val] = checked;
-            });
-
-            var selected = Object.keys(selectedRows).filter(function(key){
-              return selectedRows[key];
-            });
-            Shiny.setInputValue('%s', selected);
-          });
-        });
-        ", ns("v4_selected_rows"), ns("v4_select_all"), ns("v4_selected_rows")
-        )),
+        callback = htmlwidgets::JS(js_ns),
         rownames = FALSE
       )
     })
@@ -703,45 +667,7 @@ mod_embedded_checkbox_in_table_server <- function(id){
     })
     
     output$js_code_v4 <- renderText({
-"htmlwidgets::JS(sprintf('
-  // Initialise the selectedRows object
-  var selectedRows = {};
-  
-  // When the table first draws...
-  table.on('draw', function() {
-  
-    // Look in the table rows and find the checkboxes
-    table.rows().nodes().to$().find('.row_checkbox').each(function(){
-    
-      // Store the row number of each checkbox under the variable val.
-      var val = $(this).val();
-      
-      // Update the 'checked' property of each checkbox to be checked if the value stored in selectedRows for this row is true.
-      $(this).prop('checked', selectedRows[val] === true);
-    });
-  
-    // 1. Look in the table rows and find the checkboxes 
-    // 2. Remove any previous bindings to those checkboxes
-    // 3. Create new event bindings
-    table.rows().nodes().to$().find('.row_checkbox').off('change').on('change', function(){
-    
-      // Store the row number of each checkbox under the variable val.
-      var val = $(this).val();
-      
-      // In selectedRows assign the 'key': val as the value of the checkbox
-      selectedRows[val] = this.checked;
-      
-      // Filter selectedRows by the keys that are true and assign to the variable selected
-      var selected = Object.keys(selectedRows).filter(function(key){
-        return selectedRows[key];
-      });
-      
-      // Send selected values to Shiny
-      Shiny.setInputValue('%s', selected);
-    })
-  });
-  ', ns('v4_selected_rows'), ns('v4_select_all'), ns('v4_selected_rows')
-))"
+      readLines("inst/app/www/checkbox_v4.js") |> paste(collapse = "\n")
     })
     
     output$rows_selected_v4 = renderText({
