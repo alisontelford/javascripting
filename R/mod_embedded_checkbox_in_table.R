@@ -389,6 +389,13 @@ mod_embedded_checkbox_in_table_server <- function(id){
     data <- iris |> 
       dplyr::select(Petal.Length, Petal.Width, Species)
 
+    ########################
+    ###### Version 1 #######
+    ########################
+
+    ### This version represents the baseline situation, e.g. life without javascript. ###
+
+    # Store the renderDT code for version 1 as a string.
     table_v1_code <- '
 output$table_v1 <- DT::renderDT({
   DT::datatable(
@@ -404,13 +411,22 @@ output$table_v1 <- DT::renderDT({
   )
 })
 '
-
+    # Run the renderDT code stored above. This will actually create the table.
     eval(parse(text = table_v1_code))
     
+    # Output the renderDT code as text. tags$pre is used to keep the formatting of the code
+    # the same with indentation etc.
     output$code_v1 <- renderUI({
       tags$pre(table_v1_code)
     })
     
+    ########################
+    ###### Version 2 #######
+    ########################
+
+    ### This version initially adds the checkboxes per row. ###
+
+    # Store the renderDT code for version 2 as a string.
     table_v2_code <- "
 output$table_v2 <- DT::renderDT({
   # Read the JS file, replace placeholder with the actual namespace
@@ -433,21 +449,35 @@ output$table_v2 <- DT::renderDT({
   )
 })
 "
-
+    # Run the renderDT code stored above. This will actually create the table.
     eval(parse(text = table_v2_code))
 
+    # Output the renderDT code as text. tags$pre is used to keep the formatting of the code
+    # the same with indentation etc.
     output$code_v2 <- renderUI({
       tags$pre(table_v2_code)
     })
     
+    # Output the javascript code as text. This is read directly from the file containing the code.
     output$js_code_v2 <- renderText({
       readLines("inst/app/www/checkbox_v2.js") |> paste(collapse = "\n")
     })
 
+    # Output the values stored within input$v2_selected_rows, this will dynamically update whenever
+    # a user interacts with the checkboxes.
     output$rows_selected_v2 = renderText({
       paste0(input$v2_selected_rows)
     })
     
+
+    ########################
+    ###### Version 3 #######
+    ########################
+
+    ### This version fixes the previous versions inability to remember the selection after the table has ###
+    ### been sorted and/or filtered.                                                                     ###
+
+    # Store the renderDT code for version 3 as a string.
     table_v3_code <- "
   output$table_v3 <- DT::renderDT({
     # Read the JS file, replace placeholder with the actual namespace
@@ -470,21 +500,34 @@ output$table_v2 <- DT::renderDT({
     )
   })
 "
-    
+    # Run the renderDT code stored above. This will actually create the table.
     eval(parse(text = table_v3_code))
 
+    # Output the renderDT code as text. tags$pre is used to keep the formatting of the code
+    # the same with indentation etc.
     output$code_v3 <- renderUI({
       tags$pre(table_v3_code)
     })
-    
+
+    # Output the javascript code as text. This is read directly from the file containing the code.
     output$js_code_v3 <- renderText({
       readLines("inst/app/www/checkbox_v3.js") |> paste(collapse = "\n")
     })
-    
+
+    # Output the values stored within input$v3_selected_rows, this will dynamically update whenever
+    # a user interacts with the checkboxes.
     output$rows_selected_v3 = renderText({
       paste0(input$v3_selected_rows)
     })
     
+
+    ########################
+    ###### Version 4 #######
+    ########################
+
+    ### This version adds a select all option within the table. ###
+
+    # Store the renderDT code for version 4 as a string.
     table_v4_code <- "
 output$table_v4 <- DT::renderDT({
   # Read the JS file, replace placeholder with the actual namespace
@@ -522,21 +565,34 @@ output$table_v4 <- DT::renderDT({
   )
 })
 "
-
+    # Run the renderDT code stored above. This will actually create the table.
     eval(parse(text = table_v4_code))
 
+    # Output the renderDT code as text. tags$pre is used to keep the formatting of the code
+    # the same with indentation etc.
     output$code_v4 <- renderUI({
       tags$pre(table_v4_code)
     })
     
+    # Output the javascript code as text. This is read directly from the file containing the code.
     output$js_code_v4 <- renderText({
       readLines("inst/app/www/checkbox_v4.js") |> paste(collapse = "\n")
     })
     
+    # Output the values stored within input$v4_selected_rows, this will dynamically update whenever
+    # a user interacts with the checkboxes.
     output$rows_selected_v4 = renderText({
       paste0(input$v4_selected_rows)
     })
+
+    ########################
+    ###### Version 5 #######
+    ########################
+
+    ### This version fixes the previous versions bug of it not selecting all rows, not just what is shown ###
+    ### on the current table page.                                                                        ###
     
+    # Store the renderDT code for version 5 as a string.
     table_v5_code = "
 output$table_v5 <- DT::renderDT({
   # Read the JS file, replace placeholder with the actual namespace
@@ -574,17 +630,22 @@ output$table_v5 <- DT::renderDT({
   )
 }, server = FALSE)
 "
-
+    # Run the renderDT code stored above. This will actually create the table.
     eval(parse(text = table_v5_code))
 
+    # Output the renderDT code as text. tags$pre is used to keep the formatting of the code
+    # the same with indentation etc.
     output$code_v5 <- renderUI({
       tags$pre(table_v5_code)
     })
     
+    # Output the javascript code as text. This is read directly from the file containing the code.
     output$js_code_v5 <- renderText({
       readLines("inst/app/www/checkbox_v5.js") |> paste(collapse = "\n")
     })
-    
+
+    # Output the values stored within input$v5_selected_rows, this will dynamically update whenever
+    # a user interacts with the checkboxes.
     output$rows_selected_v5 = renderText({
       paste0(input$v5_selected_rows)
     })
