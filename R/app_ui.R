@@ -59,16 +59,17 @@ app_ui <- function(request) {
             div(style = "height: 30px"),
             div(
               shinydashboard::box(
-                title = "Application Notes",
+                title = "Current Features",
                 solidHeader = FALSE,
                 collapsible = TRUE,
                 collapsed = FALSE,
                 width = 12,
                 background = NULL,
                 HTML("
-                <h4><strong>0.5.0 (18/12/2024)</strong></h4>
+                <h4><strong>Checkboxes in DT Table</strong></h4>
                   <ul>
-                      <li>First deployed version.</li>
+                      <li>Learn how to embed checkboxes in a R shiny DT::table utilising Javascript. </li>
+                      <li>Step through various development versions and see the code required for each version.</li>
                   </ul>
                      ")
               )
