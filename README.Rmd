@@ -15,19 +15,24 @@ output: github_document
 
 # `{javascripting}`
 
-<!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-<!-- badges: end -->
+A demo Shiny app showing progressive development of various R shiny features utilising Javascript. The intent is to not only show what is possible with Javascript but also to teach users how the Javascript code works.
+
+## Features
+
+Current features include:
+- Utilising Javascript to embed checkboxes within DT tables.
+
+In all features, a version by version process is provided to show gradual progression from the starting point, to a full functioning feature with Javascript code.
 
 ## Installation
 
 You can install the development version of `{javascripting}` like so:
 
 ```{r}
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+remotes::install_github("alisontelford/javascripting")
 ```
 
-## Run
+## Launch the App
 
 You can launch the application by running:
 
@@ -35,26 +40,11 @@ You can launch the application by running:
 javascripting::run_app()
 ```
 
-## About
+## Documentation
+- Stepwise version explanations and code samples are available in-app.
+- All JavaScript assets are in `inst/app/www/`.
+- See `R/mod_embedded_checkbox_in_table.R` for modular server/UI patterns.
 
-You are reading the doc about version : `r golem::pkg_version()`
+## Contributing
 
-This README has been compiled on the
-
-```{r}
-Sys.time()
-```
-
-Here are the tests results and package coverage:
-
-```{r, error = TRUE}
-devtools::check(quiet = TRUE)
-```
-
-```{r echo = FALSE}
-unloadNamespace("javascripting")
-```
-
-```{r, error = TRUE}
-covr::package_coverage()
-```
+Contributions are welcome! Please submit PRs to the GitHub repository.
